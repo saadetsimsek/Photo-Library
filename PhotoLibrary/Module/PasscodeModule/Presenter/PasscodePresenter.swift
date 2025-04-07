@@ -16,14 +16,43 @@ protocol PasscodePresenterProtocol: AnyObject {
     func checkPasscode()
     func clearPasscode(state: PasscodeState)
     
-    init(view: PasscodeViewControllerProtocol)
+    init(view: PasscodeViewControllerProtocol, codeState: PasscodeState)
 }
 
-class PasscodePresenter {
+class PasscodePresenter: PasscodePresenterProtocol {
+    var passcode: [Int]
+    var view: PasscodeViewControllerProtocol
+    var passcodeStatee: PasscodeState
+    
+    func enterPasscode(number: Int) {
+        
+    }
+    
+    func removeLastItemInPasscode() {
+        
+    }
+    
+    func setNewPasscode() {
+        
+    }
+    
+    func checkPasscode() {
+        
+    }
+    
+    func clearPasscode(state: PasscodeState) {
+        
+    }
+    
+    required init(view: any PasscodeViewControllerProtocol, codeState: PasscodeState) {
+        self.view = view
+        self.passcodeStatee = codeState
+    }
+    
     
 }
 
-enum PasscodeState: String {
+enum PasscodeState: String { // şifre durumu
     case inputPasscode
     case wrongPasscode
     case setNewPasscode

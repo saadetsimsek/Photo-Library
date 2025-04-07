@@ -9,9 +9,14 @@ import UIKit
 
 protocol PasscodeViewControllerProtocol: AnyObject {
     
+    func passcodeState(state: PasscodeState)
+    func enterCode(code: [Int])
+    
 }
 
 class PasscodeViewController: UIViewController {
+    
+    var passcodePresenter: PasscodePresenterProtocol!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,4 +26,16 @@ class PasscodeViewController: UIViewController {
     
 
 
+}
+
+extension PasscodeViewController: PasscodeViewControllerProtocol {
+    func passcodeState(state: PasscodeState) {
+        
+    }
+    
+    func enterCode(code: [Int]) {
+        print(code)
+    }
+    
+    
 }
