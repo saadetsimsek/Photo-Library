@@ -24,6 +24,12 @@ class PasscodePresenter: PasscodePresenterProtocol {
     var view: PasscodeViewControllerProtocol
     var passcodeStatee: PasscodeState
     
+    required init(view: any PasscodeViewControllerProtocol, codeState: PasscodeState) {
+        self.view = view
+        self.passcodeStatee = codeState
+        self.passcode = []
+    }
+    
     func enterPasscode(number: Int) {
         
     }
@@ -44,10 +50,7 @@ class PasscodePresenter: PasscodePresenterProtocol {
         
     }
     
-    required init(view: any PasscodeViewControllerProtocol, codeState: PasscodeState) {
-        self.view = view
-        self.passcodeStatee = codeState
-    }
+   
     
     
 }
