@@ -17,11 +17,17 @@ protocol PasscodeViewControllerProtocol: AnyObject {
 class PasscodeViewController: UIViewController {
     
     var passcodePresenter: PasscodePresenterProtocol!
+    
+    lazy var passcodeTitle: UILabel = {
+        .configure(view: $0) { label in
+            label.textColor = .white
+        }
+    }(UILabel())
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .systemPink
+        view.backgroundColor = .systemGray
     }
     
 
