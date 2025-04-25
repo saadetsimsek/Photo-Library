@@ -148,8 +148,16 @@ extension PasscodeViewController: PasscodeViewControllerProtocol {
         passcodeTitle.text = state.getPasscodeLabel()
     }
     
+    //code stack background according to keyboard stack
     func enterCode(code: [Int]) {
         print(code)
+        let tag = code.count + 10
+        
+        (tag...14).forEach{
+            view.viewWithTag($0)?.backgroundColor = .none
+        }
+        
+        view.viewWithTag(tag)?.backgroundColor = .white
     }
     
     
