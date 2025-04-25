@@ -28,14 +28,16 @@ class PasscodePresenter: PasscodePresenterProtocol {
         self.view = view
         self.passcodeStatee = codeState
         self.passcode = []
+        
+        view.passcodeState(state: .inputPasscode)
     }
     
     func enterPasscode(number: Int) {
-        
+        print(number)
     }
     
     func removeLastItemInPasscode() {
-        
+        print(passcode)
     }
     
     func setNewPasscode() {

@@ -16,25 +16,21 @@ protocol PasscodeViewControllerProtocol: AnyObject {
 
 class PasscodeViewController: UIViewController {
     
-    var passcodePresenter: PasscodePresenterProtocol!
+    var passcodePresenter: PasscodePresenterProtocol?
     
     private let buttons: [ [Int] ] = [[1,2,3], [4,5,6], [7,8,9], [0]]
     
-    private lazy var passcodeTitle: UILabel = {
-        .configure(view: $0) { label in
-            label.textColor = .white
-            label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-            label.textAlignment = .center
-        }
-    }(UILabel())
+    private lazy var passcodeTitle: UILabel = UILabel.configure(view: UILabel()) { label in
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        label.textAlignment = .center
+    }
     
-    private lazy var keyboardStack: UIStackView = {
-        .configure(view: $0) { stack in
-            stack.axis = .vertical
-            stack.distribution = .equalSpacing
-            stack.alignment = .center
-        }
-    }(UIStackView())
+    private lazy var keyboardStack: UIStackView = UIStackView.configure(view: UIStackView()) { stack in
+        stack.axis = .vertical
+        stack.distribution = .equalSpacing
+        stack.alignment = .center
+    }
     
     private lazy var codeStack: UIStackView = {
         .configure(view: $0) { stack in
@@ -50,14 +46,28 @@ class PasscodeViewController: UIViewController {
             button.heightAnchor.constraint(equalToConstant: 36).isActive = true
             button.setBackgroundImage(UIImage(systemName: "delete.left"), for: .normal)
         }
-    }(UIButton())
+    }(UIButton(primaryAction: deleteCodeAction))
+    
+    lazy var enterCodeAction = UIAction { [weak self] sender in
+        guard let self = self, let sender = sender.sender as? UIButton
+        else { return }
+        
+        self.passcodePresenter?.enterPasscode(number: sender.tag)
+    }
+    
+    lazy var deleteCodeAction = UIAction {[weak self] sender in
+        guard let self = self, let sender = sender.sender as? UIButton
+        else { return }
+        
+        self.passcodePresenter?.removeLastItemInPasscode()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = .systemGray
-        view.addSubview(passcodeTitle)
         view.addSubview(keyboardStack)
+        view.addSubview(passcodeTitle)
         view.addSubview(codeStack)
         view.addSubview(deleteButton)
         
@@ -66,11 +76,29 @@ class PasscodeViewController: UIViewController {
             keyboardStack.addArrangedSubview(buttonLine)
         }
         
+        (11...14).forEach{
+            let view = getCodeView(tag: $0)
+            codeStack.addArrangedSubview(view)
+        }
+        
         NSLayoutConstraint.activate([
+            
+            passcodeTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            passcodeTitle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            passcodeTitle.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
+          //  passcodeTitle.heightAnchor.constraint(equalToConstant: 50),
+            
+            codeStack.topAnchor.constraint(equalTo: passcodeTitle.bottomAnchor, constant: 50),
+            codeStack.widthAnchor.constraint(equalToConstant: 140),
+            codeStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
             keyboardStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
             keyboardStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50),
             keyboardStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             keyboardStack.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 80),
+            
+            deleteButton.rightAnchor.constraint(equalTo: keyboardStack.rightAnchor, constant: -20),
+            deleteButton.bottomAnchor.constraint(equalTo: keyboardStack.bottomAnchor, constant: -25)
         ])
     }
     
@@ -91,14 +119,27 @@ extension PasscodeViewController {
     private func setHorizontalNumStack(range: [Int]) -> UIStackView {
         let stack = getHorizontalNumStack()
         range.forEach{
-            let numberButton = UIButton(primaryAction: nil)
+            let numberButton = UIButton(primaryAction: enterCodeAction)
             numberButton.tag = $0
             numberButton.setTitle("\($0)", for: .normal)
             numberButton.setTitleColor(.white, for: .normal)
             numberButton.titleLabel?.font = UIFont.systemFont(ofSize: 60, weight: .light)
+            numberButton.widthAnchor.constraint(equalToConstant: 60).isActive = true
             stack.addArrangedSubview(numberButton)
         }
         return stack
+    }
+    
+    private func getCodeView(tag: Int) -> UIView{ // sayı girilecek yer
+        return {
+            $0.widthAnchor.constraint(equalToConstant: 20).isActive = true
+            $0.heightAnchor.constraint(equalToConstant: 20).isActive = true
+            $0.layer.cornerRadius = 10
+            $0.layer.borderWidth = 2
+            $0.tag = tag
+            $0.layer.borderColor = UIColor.white.cgColor
+            return $0
+        }(UIView())
     }
 }
 
