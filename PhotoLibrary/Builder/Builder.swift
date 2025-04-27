@@ -16,7 +16,9 @@ class Builder: BuilderProtocol {
     
     static func getPassCodeController() -> UIViewController{
         let passcodeView = PasscodeViewController()
-        let presenter = PasscodePresenter(view: passcodeView, codeState: .inputPasscode)
+        let keychainManager = KeychainManager()
+        
+        let presenter = PasscodePresenter(view: passcodeView, codeState: .inputPasscode, keychainManager: keychainManager)
         passcodeView.passcodePresenter = presenter
         return passcodeView
     }

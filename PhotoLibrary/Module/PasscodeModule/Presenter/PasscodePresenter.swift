@@ -9,17 +9,19 @@ import UIKit
 
 protocol PasscodePresenterProtocol: AnyObject {
     var passcode: [Int] {get set}
-    
+    var templatePasscode: [Int]? {get set}
     func enterPasscode(number: Int)
     func removeLastItemInPasscode()
     func setNewPasscode()
     func checkPasscode()
     func clearPasscode(state: PasscodeState)
     
-    init(view: PasscodeViewControllerProtocol, codeState: PasscodeState)
+    init(view: PasscodeViewControllerProtocol, codeState: PasscodeState, keychainManager: KeychainManagerProtocol)
 }
 
 class PasscodePresenter: PasscodePresenterProtocol {
+    var templatePasscode: [Int]?
+    
     var passcode: [Int] = [] {
         didSet {
             if passcode.count == 4 {
@@ -37,12 +39,17 @@ class PasscodePresenter: PasscodePresenterProtocol {
     var view: PasscodeViewControllerProtocol
     var passcodeStatee: PasscodeState
     
-    required init(view: any PasscodeViewControllerProtocol, codeState: PasscodeState) {
+    var keychainManager: KeychainManagerProtocol
+    
+    required init(view: any PasscodeViewControllerProtocol, codeState: PasscodeState, keychainManager: KeychainManagerProtocol) {
         self.view = view
         self.passcodeStatee = codeState
         self.passcode = []
         
+        self.keychainManager = keychainManager
+        
         view.passcodeState(state: .inputPasscode)
+        
     }
     
     func enterPasscode(number: Int) {
@@ -60,7 +67,23 @@ class PasscodePresenter: PasscodePresenterProtocol {
     }
     
     func setNewPasscode() {
-        
+        if templatePasscode != nil {
+            if passcode == templatePasscode! {
+                
+                let stringPasscode = passcode.map { String($0)}.joined()
+                keychainManager.save(key: KeychainKeys.passcode.rawValue, value: stringPasscode)
+                print(stringPasscode)
+                print("saved")
+                //
+            }
+            else{
+                self.view.passcodeState(state: .codeMismatch)
+            }
+        }
+        else {
+            templatePasscode = passcode
+            self.clearPasscode(state: .repeatPasscode)
+        }
     }
     
     func checkPasscode() {
