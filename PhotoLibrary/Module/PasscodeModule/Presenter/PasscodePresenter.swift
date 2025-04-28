@@ -37,7 +37,7 @@ class PasscodePresenter: PasscodePresenterProtocol {
             }
         }
     }
-    var view: PasscodeViewControllerProtocol
+    weak var view: PasscodeViewControllerProtocol?
     var passcodeStatee: PasscodeState
     
     var keychainManager: KeychainManagerProtocol
@@ -56,14 +56,14 @@ class PasscodePresenter: PasscodePresenterProtocol {
     func enterPasscode(number: Int) {
         if passcode.count < 4 {
             self.passcode.append(number)
-            view.enterCode(code: passcode)
+            view?.enterCode(code: passcode)
         }
     }
     
     func removeLastItemInPasscode() {
         if !passcode.isEmpty {
             self.passcode.removeLast()
-            view.enterCode(code: passcode)
+            view?.enterCode(code: passcode)
         }
     }
     
@@ -78,7 +78,7 @@ class PasscodePresenter: PasscodePresenterProtocol {
                 //
             }
             else{
-                self.view.passcodeState(state: .codeMismatch)
+                self.view?.passcodeState(state: .codeMismatch)
             }
         }
         else {
@@ -104,8 +104,8 @@ class PasscodePresenter: PasscodePresenterProtocol {
     
     func clearPasscode(state: PasscodeState) {
         self.passcode = []
-        self.view.enterCode(code: [])
-        view.passcodeState(state: state)
+        self.view?.enterCode(code: [])
+        self.view?.passcodeState(state: state)
     }
     
    
