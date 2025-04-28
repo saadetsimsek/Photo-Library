@@ -17,7 +17,12 @@ class KeychainManager: KeychainManagerProtocol {
     private let keychain = Keychain(service: "PASSCODE")
     
     func save(key: String, value: String) {
-        keychain[key] = value
+        do{
+            try keychain.set(value, key: key)
+        }
+        catch{
+            print("keychain save error \(error)" )
+        }
     }
     
     func load(key: String) -> Result<String, any Error> {

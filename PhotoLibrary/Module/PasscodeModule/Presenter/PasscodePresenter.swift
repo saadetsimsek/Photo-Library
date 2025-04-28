@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import KeychainAccess
 
 protocol PasscodePresenterProtocol: AnyObject {
     var passcode: [Int] {get set}
@@ -87,7 +88,18 @@ class PasscodePresenter: PasscodePresenterProtocol {
     }
     
     func checkPasscode() {
-        
+        let keychainPasscodeResult = keychainManager.load(key: KeychainKeys.passcode.rawValue)
+        switch keychainPasscodeResult {
+        case .success(let code):
+            if self.passcode == code.digits {
+                print("success")
+            }
+            else {
+                self.clearPasscode(state: .wrongPasscode)
+            }
+        case .failure(let error):
+            print(error.localizedDescription)
+        }
     }
     
     func clearPasscode(state: PasscodeState) {
