@@ -25,7 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         let window = UIWindow(windowScene: windowScene)
-        let vc = Builder.getPassCodeController(codeState: checkIssetPasscode(), sceneDelegate: self)
+        let vc = Builder.createTabBarController()//Builder.getPassCodeController(codeState: checkIssetPasscode(), sceneDelegate: self)
         window.rootViewController = UINavigationController(rootViewController: vc)
         window.makeKeyAndVisible()
         self.window = window

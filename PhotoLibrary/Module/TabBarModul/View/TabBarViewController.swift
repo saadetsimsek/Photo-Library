@@ -18,9 +18,13 @@ class TabBarViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .systemBlue
+        view.backgroundColor = .systemGray
+        
     }
-    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+       // self.tabBar.isHidden = true
+    }
 }
 
 extension TabBarViewController: TabBarViewControllerProtocol {
