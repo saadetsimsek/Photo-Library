@@ -17,7 +17,7 @@ protocol PasscodePresenterProtocol: AnyObject {
     func checkPasscode()
     func clearPasscode(state: PasscodeState)
     
-    init(view: PasscodeViewControllerProtocol, codeState: PasscodeState, keychainManager: KeychainManagerProtocol)
+    init(view: PasscodeViewControllerProtocol, codeState: PasscodeState, keychainManager: KeychainManagerProtocol, sceneDelegate: SceneDelegateProtocol)
 }
 
 class PasscodePresenter: PasscodePresenterProtocol {
@@ -41,15 +41,18 @@ class PasscodePresenter: PasscodePresenterProtocol {
     var passcodeStatee: PasscodeState
     
     var keychainManager: KeychainManagerProtocol
+    var sceneDelegate: SceneDelegateProtocol
     
-    required init(view: any PasscodeViewControllerProtocol, codeState: PasscodeState, keychainManager: KeychainManagerProtocol) {
+    required init(view: any PasscodeViewControllerProtocol, codeState: PasscodeState, keychainManager: KeychainManagerProtocol, sceneDelegate: SceneDelegateProtocol) {
         self.view = view
         self.passcodeStatee = codeState
         self.passcode = []
         
         self.keychainManager = keychainManager
+        self.sceneDelegate = sceneDelegate
         
-        view.passcodeState(state: .inputPasscode)
+        view.passcodeState(state: passcodeStatee)
+       
         
     }
     
@@ -73,8 +76,9 @@ class PasscodePresenter: PasscodePresenterProtocol {
                 
                 let stringPasscode = passcode.map { String($0)}.joined()
                 keychainManager.save(key: KeychainKeys.passcode.rawValue, value: stringPasscode)
-                print(stringPasscode)
                 print("saved")
+                self.sceneDelegate.startMainScreen()
+                
                 //
             }
             else{
@@ -93,6 +97,7 @@ class PasscodePresenter: PasscodePresenterProtocol {
         case .success(let code):
             if self.passcode == code.digits {
                 print("success")
+                sceneDelegate.startMainScreen()
             }
             else {
                 self.clearPasscode(state: .wrongPasscode)
