@@ -15,6 +15,7 @@ class MainScreenViewController: UIViewController {
 
     var presenter: MainScreenPresenterProtocol?
     
+    private var topInsets: CGFloat = 0
    
     private var menuViewHeight : CGFloat = 0
     
@@ -71,6 +72,8 @@ class MainScreenViewController: UIViewController {
         view.backgroundColor = .systemGray
         view.addSubview(topMenuView)
         view.addSubview(collectionView)
+        
+        topInsets = collectionView.adjustedContentInset.top
         
     }
     
@@ -152,6 +155,18 @@ extension MainScreenViewController: UICollectionViewDataSource, UICollectionView
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         CGSize(width: view.frame.width - 60,
                height: 40)
+    }
+    
+    //tap title uprising did scroll
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let menuTopPosition = scrollView.contentOffset.y + topInsets
+        
+        if menuTopPosition < 10, menuTopPosition > 0 {
+            topMenuView.frame.origin.y = -menuTopPosition
+            let hey = 30 - menuTopPosition * 0.2
+            self.menuAppName.font = UIFont.systemFont(ofSize: hey, weight: .bold)
+        //   self.view.layoutIfNeeded()
+        }
     }
     
 }
