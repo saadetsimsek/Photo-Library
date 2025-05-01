@@ -15,6 +15,31 @@ class MainScreenViewController: UIViewController {
 
     var presenter: MainScreenPresenterProtocol?
     
+   
+    private var menuViewHeight : CGFloat = 0
+    
+    private lazy var topMenuView: UIView = {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = .gray
+        $0.addSubview(menuAppName)
+        $0.addSubview(settingButton)
+        return $0
+    }(UIView())
+    
+    private lazy var menuAppName: UILabel = {
+        $0.text = "Photo Library"
+        $0.font = UIFont.systemFont(ofSize: 30, weight: .bold)
+        $0.textColor = .white
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        return $0
+    }(UILabel())
+    
+    private lazy var settingButton: UIButton = {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.setBackgroundImage(UIImage(systemName: "gearshape"), for: .normal)
+        return $0
+    }(UIButton())
+    
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
       //  let screenWidth = UIScreen.main.bounds.width
@@ -29,9 +54,11 @@ class MainScreenViewController: UIViewController {
                                            right: 0)
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collection.backgroundColor = .clear
+        collection.contentInset.top = 50
         collection.dataSource = self
         collection.delegate = self
         collection.alwaysBounceVertical = true
+        collection.contentInsetAdjustmentBehavior = .never
         collection.register(MainPostCollectionViewCell.self, forCellWithReuseIdentifier: MainPostCollectionViewCell.identifier)
         collection.register(MainPostHeaderCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: MainPostHeaderCollectionReusableView.identifier)
         collection.translatesAutoresizingMaskIntoConstraints = false
@@ -42,14 +69,32 @@ class MainScreenViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .systemGray
+        view.addSubview(topMenuView)
         view.addSubview(collectionView)
+        
+    }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        menuViewHeight = UIApplication.topSafeArea + 50
         setConstraints()
     }
     
     private func setConstraints() {
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
+            topMenuView.topAnchor.constraint(equalTo: view.topAnchor),
+            topMenuView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            topMenuView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            topMenuView.heightAnchor.constraint(equalToConstant: menuViewHeight),
+            
+            menuAppName.leadingAnchor.constraint(equalTo: topMenuView.leadingAnchor, constant: 20),
+            menuAppName.bottomAnchor.constraint(equalTo: topMenuView.bottomAnchor, constant: -20),
+            
+            settingButton.trailingAnchor.constraint(equalTo: topMenuView.trailingAnchor, constant: -20),
+            settingButton.centerYAnchor.constraint(equalTo: menuAppName.centerYAnchor),
+            
+            collectionView.topAnchor.constraint(equalTo: topMenuView.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
