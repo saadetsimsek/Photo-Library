@@ -27,9 +27,13 @@ class MainPostCollectionViewCell: UICollectionViewCell {
     }(UIImageView(frame: bounds))
     
     lazy var countLabelStack: UIStackView = {
-        .configure(view: $0) { stack in
+        .configure(view: $0) {[weak self] stack in
+            guard let self = self else { return }
             stack.axis = .horizontal
             stack.spacing = 20
+            stack.addArrangedSubview(self.photoCountLabel)
+            stack.addArrangedSubview(self.commentCountLabel)
+            stack.addArrangedSubview(self.postDescriptionLabel)
         }
     }(UIStackView())
     
@@ -59,6 +63,22 @@ class MainPostCollectionViewCell: UICollectionViewCell {
     
     func configureCell(item: PostItemModel){
         postImage.image = UIImage(named: item.photos.first!)
+        photoCountLabel = getCellLabel(text: "\(item.photos.count) Photo")
+        commentCountLabel = getCellLabel(text: "\(item.comments?.count ?? 0) Comment")
+        postDescriptionLabel = getCellLabel(text: item.description ?? "")
+        
+        addSubview(countLabelStack)
+    }
+    
+    private func getCellLabel(text: String) -> UILabel {
+        return {
+            .configure(view: $0) { label in
+                label.numberOfLines = 0
+                label.font = .systemFont(ofSize: 14)
+                label.text = text
+                label.textColor = .white
+            }
+        }(UILabel())
     }
      
 }
