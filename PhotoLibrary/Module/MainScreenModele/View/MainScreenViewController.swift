@@ -127,6 +127,9 @@ extension MainScreenViewController: UICollectionViewDataSource, UICollectionView
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainPostCollectionViewCell.identifier, for: indexPath) as? MainPostCollectionViewCell
         else { return UICollectionViewCell()}
+        if let item = presenter?.posts?[indexPath.section].items[indexPath.row] {
+            cell.configureCell(item: item)
+        }
         cell.backgroundColor = .systemPink
         return cell
     }
@@ -134,7 +137,7 @@ extension MainScreenViewController: UICollectionViewDataSource, UICollectionView
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = collectionView.bounds.width
         return CGSize(width: width,
-                      height: 200)
+                      height: 400)
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -161,11 +164,11 @@ extension MainScreenViewController: UICollectionViewDataSource, UICollectionView
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let menuTopPosition = scrollView.contentOffset.y + topInsets
         
-        if menuTopPosition < 10, menuTopPosition > 0 {
+        if menuTopPosition < 50, menuTopPosition > 0 {
             topMenuView.frame.origin.y = -menuTopPosition
-            let hey = 30 - menuTopPosition * 0.2
-            self.menuAppName.font = UIFont.systemFont(ofSize: hey, weight: .bold)
-        //   self.view.layoutIfNeeded()
+            let fontSize = 30 - menuTopPosition * 0.2
+            self.menuAppName.font = UIFont.systemFont(ofSize: fontSize, weight: .bold)
+        //   self.view.layoutIfNeeded() // push to reload
         }
     }
     
