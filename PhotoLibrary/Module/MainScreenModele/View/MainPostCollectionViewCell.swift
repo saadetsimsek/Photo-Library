@@ -62,12 +62,35 @@ class MainPostCollectionViewCell: UICollectionViewCell {
     }
     
     func configureCell(item: PostItemModel){
+        tags = item.tag ?? []
+        let tagCollection: TagCollectionViewProtocol = TagCollectionView(dataSource: self)
+        tagCollectionView = tagCollection.getCollectionView()
+        
         postImage.image = UIImage(named: item.photos.first!)
         photoCountLabel = getCellLabel(text: "\(item.photos.count) Photo")
         commentCountLabel = getCellLabel(text: "\(item.comments?.count ?? 0) Comment")
         postDescriptionLabel = getCellLabel(text: item.description ?? "")
         
         addSubview(countLabelStack)
+        addSubview(tagCollectionView)
+        addSubview(postDescriptionLabel)
+        
+        NSLayoutConstraint.activate([
+            
+            countLabelStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            
+            
+            tagCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            tagCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            tagCollectionView.bottomAnchor.constraint(equalTo: postDescriptionLabel.topAnchor, constant: -10),
+            tagCollectionView.heightAnchor.constraint(equalToConstant: 40),
+            
+            
+            postDescriptionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            postDescriptionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+            postDescriptionLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -30),
+            
+        ])
     }
     
     private func getCellLabel(text: String) -> UILabel {
@@ -81,4 +104,19 @@ class MainPostCollectionViewCell: UICollectionViewCell {
         }(UILabel())
     }
      
+}
+
+extension MainPostCollectionViewCell: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return tags.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TagCollectionViewCell.identifier, for: indexPath) as! TagCollectionViewCell
+        let tag = tags[indexPath.row]
+        cell.cellConfigure(tagText: tag)
+        return cell
+    }
+    
+    
 }

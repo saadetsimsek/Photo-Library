@@ -8,13 +8,17 @@
 import UIKit
 
 protocol TagCollectionViewProtocol: AnyObject {
-    var dataSource: UICollectionViewDataSource? { get set }
+    var dataSource: UICollectionViewDataSource { get set }
     init (dataSource: UICollectionViewDataSource)
-    
     func getCollectionView() -> UICollectionView
+    
+    var isEditing : Bool { get set }
 }
 
 class TagCollectionView {
+    
+    var dataSource: UICollectionViewDataSource
+    var isEditing: Bool = false
     
     required init(dataSource: UICollectionViewDataSource) {
         self.dataSource = dataSource
@@ -22,14 +26,7 @@ class TagCollectionView {
 }
    
 extension TagCollectionView: TagCollectionViewProtocol {
-    var dataSource: (any UICollectionViewDataSource)? {
-        get {
-            <#code#>
-        }
-        set {
-            <#code#>
-        }
-    }
+   
     
     func getCollectionView() -> UICollectionView {
         return {
@@ -52,6 +49,7 @@ extension TagCollectionView: TagCollectionViewProtocol {
         }(UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout()))
     }
     
+  
     
 }
 
