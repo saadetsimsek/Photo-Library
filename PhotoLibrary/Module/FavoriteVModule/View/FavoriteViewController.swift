@@ -14,16 +14,47 @@ protocol FavoriteViewControllerProtocol: AnyObject {
 class FavoriteViewController: UIViewController {
     
     var presenter: FavoriteViewPresenterProtocol!
+    
+    lazy var collectionView: UICollectionView = {
+        let itemSize = ((view.bounds.width - 60) / 2) - 15
+        let layout = $0.collectionViewLayout as! UICollectionViewFlowLayout
+        layout.itemSize = CGSize(width: itemSize,
+                                 height: itemSize)
+        layout.minimumLineSpacing = 30
+     //   layout.minimumInteritemSpacing = 30
+        layout.sectionInset = UIEdgeInsets(top: 50,
+                                           left: 30,
+                                           bottom: 80,
+                                           right: 30)
+        $0.showsVerticalScrollIndicator = false
+        $0.dataSource = self
+        $0.delegate = self
+        $0.alwaysBounceVertical = true
+        $0.backgroundColor = .clear
+        $0.register(FavoriteCollectionViewCell.self, forCellWithReuseIdentifier: FavoriteCollectionViewCell.identifier)
+        return $0
+    }(UICollectionView(frame: view.bounds, collectionViewLayout: UICollectionViewFlowLayout()))
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
         view.backgroundColor = .lightGray
-        
+        view.addSubview(collectionView)
+        setupNavBar()
+       
     }
     
-
+    private func setupNavBar(){
+        title = "Favorites"
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.largeTitleTextAttributes = [
+            NSAttributedString.Key.foregroundColor : UIColor.white
+        ]
+        
+        navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.foregroundColor : UIColor.white
+        ]
+    }
 
 }
 
@@ -33,4 +64,17 @@ extension FavoriteViewController: FavoriteViewControllerProtocol {
     }
     
     
+}
+
+extension FavoriteViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return  presenter.post.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+       let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FavoriteCollectionViewCell.identifier, for: indexPath) as! FavoriteCollectionViewCell
+        cell.backgroundColor = .red
+        return cell
+        
+    }
 }

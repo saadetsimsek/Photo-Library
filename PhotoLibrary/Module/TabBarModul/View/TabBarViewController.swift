@@ -30,8 +30,13 @@ class TabBarViewController: UITabBarController {
                                                isBigButton: $0.offset == 1 ? true : false)
             
             view.addSubview(tabButton)
+            
         }
         
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        selectedIndex = 2
     }
     
     lazy var selectedItem = UIAction { [weak self] sender in
