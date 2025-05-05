@@ -49,6 +49,8 @@ class Builder: BuilderProtocol {
     
     static func createFavoriteScreenController() -> UIViewController {
         let favoriteView = FavoriteViewController()
-        return favoriteView
+        let presenter = FavoritePresenter(view: favoriteView )
+        favoriteView.presenter = presenter
+        return UINavigationController(rootViewController: favoriteView)
     }
 }
