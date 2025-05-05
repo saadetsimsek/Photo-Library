@@ -22,7 +22,6 @@ class MainPostCollectionViewCell: UICollectionViewCell {
     lazy var postImage: UIImageView = {
         $0.contentMode = .scaleAspectFill
         $0.clipsToBounds = true
-        
         return $0
     }(UIImageView(frame: bounds))
     
@@ -33,9 +32,22 @@ class MainPostCollectionViewCell: UICollectionViewCell {
             stack.spacing = 20
             stack.addArrangedSubview(self.photoCountLabel)
             stack.addArrangedSubview(self.commentCountLabel)
-            stack.addArrangedSubview(self.postDescriptionLabel)
+         //   stack.addArrangedSubview(self.postDescriptionLabel)
+            stack.addArrangedSubview(UIView())
         }
     }(UIStackView())
+    
+    lazy var  addFavoriteButton: UIButton = {
+        $0.frame = CGRect(x: bounds.width - 60,
+                          y: 45,
+                          width: 25,
+                          height: 25)
+        $0.setImage(UIImage(named: "heart"), for: .normal)
+        $0.clipsToBounds = true
+        $0.contentMode = .scaleAspectFill
+        $0.tintColor = .white
+        return $0
+    }(UIButton(primaryAction: nil))
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -51,6 +63,7 @@ class MainPostCollectionViewCell: UICollectionViewCell {
    
     private func viewConfiguration(){
         addSubview(postImage)
+        addSubview(addFavoriteButton)
         layer.cornerRadius = 10
         clipsToBounds = true
         
@@ -59,6 +72,12 @@ class MainPostCollectionViewCell: UICollectionViewCell {
                         endPoint: CGPoint(x: 0.5, y: 0.5),
                         colors: [.black, .clear],
                         location: [0,1])
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        tagCollectionView.removeFromSuperview()
+        postDescriptionLabel.removeFromSuperview()
     }
     
     func configureCell(item: PostItemModel){
@@ -76,19 +95,25 @@ class MainPostCollectionViewCell: UICollectionViewCell {
         addSubview(postDescriptionLabel)
         
         NSLayoutConstraint.activate([
+            postImage.topAnchor.constraint(equalTo: topAnchor),
+            postImage.leadingAnchor.constraint(equalTo: leadingAnchor),
+            postImage.trailingAnchor.constraint(equalTo: trailingAnchor),
+            postImage.bottomAnchor.constraint(equalTo: bottomAnchor),
             
             countLabelStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            countLabelStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+            countLabelStack.bottomAnchor.constraint(equalTo: tagCollectionView.topAnchor, constant: -8),
             
+            postDescriptionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            postDescriptionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+            postDescriptionLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -30),
             
             tagCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
             tagCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
             tagCollectionView.bottomAnchor.constraint(equalTo: postDescriptionLabel.topAnchor, constant: -10),
             tagCollectionView.heightAnchor.constraint(equalToConstant: 40),
             
-            
-            postDescriptionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            postDescriptionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-            postDescriptionLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -30),
+         
             
         ])
     }

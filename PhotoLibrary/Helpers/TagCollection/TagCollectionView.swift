@@ -39,7 +39,7 @@ extension TagCollectionView: TagCollectionViewProtocol {
                                                    left: 20,
                                                    bottom: 0,
                                                    right: 20)
-                collection.alwaysBounceHorizontal = false
+                collection.alwaysBounceHorizontal = true
                 collection.showsHorizontalScrollIndicator = false
                 collection.dataSource = self.dataSource
                 collection.backgroundColor = .clear
