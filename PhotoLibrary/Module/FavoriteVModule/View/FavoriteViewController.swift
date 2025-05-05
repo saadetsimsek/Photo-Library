@@ -40,13 +40,20 @@ class FavoriteViewController: UIViewController {
 
         view.backgroundColor = .lightGray
         view.addSubview(collectionView)
-        setupNavBar()
        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setupNavBar()
     }
     
     private func setupNavBar(){
         title = "Favorites"
         navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.barTintColor = .systemGray
+       // navigationController?.navigationBar.isTranslucent = false
+        
         navigationController?.navigationBar.largeTitleTextAttributes = [
             NSAttributedString.Key.foregroundColor : UIColor.white
         ]
@@ -61,6 +68,7 @@ class FavoriteViewController: UIViewController {
 extension FavoriteViewController: FavoriteViewControllerProtocol {
     func showPost() {
         //
+        collectionView.reloadData()
     }
     
     
@@ -68,12 +76,14 @@ extension FavoriteViewController: FavoriteViewControllerProtocol {
 
 extension FavoriteViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return  presenter.post.count
+        return  presenter.post?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FavoriteCollectionViewCell.identifier, for: indexPath) as! FavoriteCollectionViewCell
-        cell.backgroundColor = .red
+        if let item = presenter.post?[indexPath.item]{
+            cell.configureCell(item: item)
+        }
         return cell
         
     }

@@ -9,7 +9,7 @@ import UIKit
 
 protocol FavoriteViewPresenterProtocol: AnyObject {
     init(view: FavoriteViewControllerProtocol)
-    var post: [PostItemModel] { get set }
+    var post: [PostItemModel]? { get set }
     func getPosts()
 }
 
@@ -17,7 +17,7 @@ class FavoritePresenter {
     
     private weak var view: FavoriteViewControllerProtocol?
     
-    var post: [PostItemModel] = []
+    var post: [PostItemModel]? = []
     
     required init(view: FavoriteViewControllerProtocol) {
         self.view = view
