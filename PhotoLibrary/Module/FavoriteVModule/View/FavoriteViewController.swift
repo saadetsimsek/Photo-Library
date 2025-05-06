@@ -87,4 +87,11 @@ extension FavoriteViewController: UICollectionViewDelegate, UICollectionViewData
         return cell
         
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let item = presenter.post?[indexPath.item] else {return}
+        
+        let detailsView = Builder.createDetailsController(item: item)
+        navigationController?.pushViewController(detailsView, animated: true)
+    }
 }

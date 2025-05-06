@@ -53,4 +53,11 @@ class Builder: BuilderProtocol {
         favoriteView.presenter = presenter
         return UINavigationController(rootViewController: favoriteView)
     }
+    
+    static func createDetailsController(item: PostItemModel) -> UIViewController {
+        let detailView = DetailsViewController()
+        let presenter = DetailViewPresenter(view: detailView, item: item)
+        detailView.presenter = presenter
+        return detailView
+    }
 }
