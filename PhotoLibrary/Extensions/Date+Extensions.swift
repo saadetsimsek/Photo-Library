@@ -25,10 +25,5 @@ extension Date {
         }
     }
     
-    func formattedDate() -> String {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "us_EN")
-        formatter.dateFormat = "dd MMMM yyyy"
-        return formatter.string(from: self)
-    }
+
 }
