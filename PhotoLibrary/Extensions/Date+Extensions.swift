@@ -25,5 +25,27 @@ extension Date {
         }
     }
     
+    func formattedDate(formatType: DateFormatType = .full) -> String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "us_EN")
+          
+            
+        switch formatType {
+        case .full:
+            formatter.dateFormat = "dd MMMM yyyy"
+        case .onlyDate:
+            formatter.dateFormat = "dd MMMM"
+        case .onlyYear:
+            formatter.dateFormat = "yyyy"
+        }
+        
+        return formatter.string(from: self)
+    }
+    
+}
 
+enum DateFormatType {
+    case full
+    case onlyDate
+    case onlyYear
 }

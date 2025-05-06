@@ -19,6 +19,22 @@ class NavigationHeader {
     var closeAction: UIAction?
     var date: Date
     
+    lazy var dateLabel: UILabel = getHeaderLabel(text: date.formattedDate(formatType: .onlyDate),
+                                                 size: 30,
+                                                 weight: .bold)
+    lazy var yearLabel: UILabel = getHeaderLabel(text: date.formattedDate(formatType: .onlyYear),
+                                                 size: 14,
+                                                 weight: .light)
+    
+    lazy var dateStack: UIStackView = {
+        $0.axis = .vertical
+        $0.addArrangedSubview(dateLabel)
+        $0.addArrangedSubview(yearLabel)
+        return $0
+    }(UIStackView(frame: CGRect(x: 45,
+                                y: 0,
+                                width: 200,
+                                height: 44)))
     
     init(backAction: UIAction? = nil, menuAction: UIAction? = nil, closeAction: UIAction? = nil, date: Date) {
         self.backAction = backAction
