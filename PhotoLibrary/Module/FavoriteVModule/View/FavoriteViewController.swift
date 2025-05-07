@@ -52,6 +52,7 @@ class FavoriteViewController: UIViewController {
         title = "Favorites"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.barTintColor = .systemGray
+        navigationController?.navigationBar.isHidden = false
        // navigationController?.navigationBar.isTranslucent = false
         
         navigationController?.navigationBar.largeTitleTextAttributes = [
