@@ -20,43 +20,31 @@ class NavigationHeader {
     var date: Date
     
     private lazy var navigationView : UIView = {
-        $0.frame = CGRect(x: 30,
-                          y: 0,
-                          width: UIScreen.main.bounds.width - 60,
-                          height: 44)
-        $0.backgroundColor = .systemGray
+        $0.translatesAutoresizingMaskIntoConstraints = false
         $0.addSubview(dateStack)
         return $0
     }(UIView())
     
     
-    lazy var dateStack: UIStackView = {
+    private lazy var dateStack: UIStackView = {
         $0.axis = .vertical
         $0.addArrangedSubview(dateLabel)
         $0.addArrangedSubview(yearLabel)
+        $0.translatesAutoresizingMaskIntoConstraints = false
         return $0
-    }(UIStackView(frame: CGRect(x: 45,
-                                y: 0,
-                                width: 200,
-                                height: 44)))
+    }(UIStackView())
     
-    lazy var dateLabel: UILabel = getHeaderLabel(text: date.formattedDate(formatType: .onlyDate),
+    private lazy var dateLabel: UILabel = getHeaderLabel(text: date.formattedDate(formatType: .onlyDate),
                                                  size: 30,
                                                  weight: .bold)
-    lazy var yearLabel: UILabel = getHeaderLabel(text: date.formattedDate(formatType: .onlyYear),
+    private lazy var yearLabel: UILabel = getHeaderLabel(text: date.formattedDate(formatType: .onlyYear),
                                                  size: 14,
                                                  weight: .light)
-    lazy var backButton: UIButton = getActionButton(origin: CGPoint(x: 0,
-                                                                    y: 0),
-                                                    icon: .backIcon,
-                                                    action: backAction)
-    lazy var closeButton: UIButton = getActionButton(origin: CGPoint(x: navigationView.frame.width - 30,
-                                                                     y: 0),
-                                                     icon: .closeIcon,
+    private lazy var backButton: UIButton = getActionButton(icon: .backIcon,
+                                                            action: backAction)
+    private lazy var closeButton: UIButton = getActionButton(icon: .closeIcon,
                                                      action: closeAction)
-    lazy var menuButton: UIButton =  getActionButton(origin: CGPoint(x: navigationView.frame.width - 30,
-                                                                     y: 0),
-                                                     icon: .menuIcon,
+    private lazy var menuButton: UIButton =  getActionButton(icon: .menuIcon,
                                                      action: menuAction)
     
     init(backAction: UIAction? = nil, menuAction: UIAction? = nil, closeAction: UIAction? = nil, date: Date) {
@@ -66,12 +54,13 @@ class NavigationHeader {
         self.date = date
     }
     
-    private func getActionButton(origin: CGPoint, icon: UIImage, action:UIAction?) -> UIButton {
+    
+    private func getActionButton(icon: UIImage, action:UIAction?) -> UIButton {
         let button = UIButton(primaryAction: action)
-        button.frame.size = CGSize(width: 25,
-                                   height: 25)
-        button.frame.origin = origin
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.setBackgroundImage(icon, for: .normal)
+        button.widthAnchor.constraint(equalToConstant: 25).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 25).isActive = true
         return button
     }
     
@@ -80,6 +69,7 @@ class NavigationHeader {
         label.text = text
         label.textColor = .white
         label.font = UIFont.systemFont(ofSize: size, weight: weight)
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }
     
@@ -91,6 +81,31 @@ class NavigationHeader {
         case .close:
             navigationView.addSubview(closeButton)
         }
+        
+        NSLayoutConstraint.activate([
+            navigationView.heightAnchor.constraint(equalToConstant: 44),
+            
+            //dateStack
+            dateStack.centerXAnchor.constraint(equalTo: navigationView.centerXAnchor),
+            dateStack.centerYAnchor.constraint(equalTo: navigationView.centerYAnchor),
+        ])
+        
+        if type == .back {
+            NSLayoutConstraint.activate([
+                backButton.leadingAnchor.constraint(equalTo: navigationView.leadingAnchor),
+                backButton.centerYAnchor.constraint(equalTo: navigationView.centerYAnchor),
+                
+                menuButton.trailingAnchor.constraint(equalTo: navigationView.trailingAnchor),
+                menuButton.centerYAnchor.constraint(equalTo: navigationView.centerYAnchor)
+            ])
+            
+        }  else if type == .close {
+            NSLayoutConstraint.activate([
+                closeButton.trailingAnchor.constraint(equalTo: navigationView.trailingAnchor),
+                closeButton.centerYAnchor.constraint(equalTo: navigationView.centerYAnchor)
+            ])
+        }
+        
         return navigationView
     }
 }

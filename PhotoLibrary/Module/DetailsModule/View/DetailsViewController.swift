@@ -18,11 +18,8 @@ class DetailsViewController: UIViewController {
     private var menuViewHeight = UIApplication.topSafeArea + 80
     
     lazy var topMenuView: UIView = {
-        $0.frame = CGRect(x: 0,
-                          y: 0,
-                          width: view.bounds.width,
-                          height: menuViewHeight)
-        $0.backgroundColor = .systemGray
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.isUserInteractionEnabled = false
         return $0
     }(UIView())
     
@@ -36,10 +33,14 @@ class DetailsViewController: UIViewController {
         print("menu")
     }
     
-    lazy var navigationHeader : NavigationHeader = {
+    lazy var navigationHeaderr : NavigationHeader = {
         NavigationHeader(backAction: backAction,
                          menuAction: menuAction,
                          date: presenter.item?.date ?? Date())
+    }()
+    
+    private lazy var headerView: UIView = {
+        navigationHeaderr.getNavigationHeader(type: .back)
     }()
 
     override func viewDidLoad() {
@@ -47,7 +48,9 @@ class DetailsViewController: UIViewController {
         title = "Detail"
         view.backgroundColor = .systemGray
         view.addSubview(topMenuView)
-        setupPageHeader()
+        view.addSubview(headerView)
+        setupConstraints()
+       
 
     }
     
@@ -58,11 +61,20 @@ class DetailsViewController: UIViewController {
         navigationController?.navigationBar.isHidden = true
     }
     
-    private func setupPageHeader() {
-        let heraderView = navigationHeader.getNavigationHeader(type: .back)
-        heraderView.frame.origin.y = UIApplication.topSafeArea
-        view.addSubview(heraderView)
+    private func setupConstraints() {
+        NSLayoutConstraint.activate([
+            topMenuView.topAnchor.constraint(equalTo: view.topAnchor),
+            topMenuView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            topMenuView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            topMenuView.heightAnchor.constraint(equalToConstant: menuViewHeight),
+            
+            headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            headerView.heightAnchor.constraint(equalToConstant: 44)
+        ])
     }
+  
 }
 
 extension DetailsViewController: DetailViewControllerProtocol {
