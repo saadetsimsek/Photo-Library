@@ -105,12 +105,14 @@ extension DetailsViewController {
                 return self?.createPhotoSection()
             case 1:
                 return self?.createTagSection()
+            case 2, 3:
+                return self?.createDescriptionSection()
             default:
                 return self?.createPhotoSection()
             }
         }
     }
-   
+    
     private func createPhotoSection() -> NSCollectionLayoutSection {
         //item (size)
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
@@ -157,11 +159,54 @@ extension DetailsViewController {
         section.orthogonalScrollingBehavior = .continuous
         return section
     }
+    
+    private func createDescriptionSection() -> NSCollectionLayoutSection {
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
+                                               heightDimension: .estimated(100))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
+                                                       subitems: [.init(layoutSize: groupSize)])
+        
+        group.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil,
+                                                          top: nil,
+                                                          trailing: nil,
+                                                          bottom: .fixed(10))
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.contentInsets = NSDirectionalEdgeInsets(top: 20,
+                                                        leading: 30,
+                                                        bottom: 0,
+                                                        trailing: 30)
+        section.orthogonalScrollingBehavior = .continuous
+        return section
+        
+        
+    }
+    
+    private func createCommentTextFieldSection() -> NSCollectionLayoutSection {
+        
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
+                                              heightDimension: .fractionalHeight(1))
+        
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
+                                               heightDimension: .absolute(50))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
+                                                       subitems: [item])
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.contentInsets = NSDirectionalEdgeInsets(top: 30,
+                                                        leading: 30,
+                                                        bottom: 60,
+                                                        trailing: 30)
+        return section
+    }
 }
 
 extension DetailsViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
+        return 4
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -170,10 +215,10 @@ extension DetailsViewController: UICollectionViewDataSource {
             return presenter.item?.photos.count ?? 0
         case 1:
             return presenter.item?.tag?.count ?? 0
-   /*     case 2, 4, 5:
+        case 2:
             return 1
         case 3:
-            return presenter.item?.comments?.count ?? 0 */
+            return 3//presenter.item?.comments?.count ?? 0
         default:
             return 1
         }
