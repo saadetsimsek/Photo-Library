@@ -7,6 +7,11 @@
 
 import UIKit
 
+protocol TagCollectionViewCellProtocol: AnyObject {
+    static var identifier: String { get }
+    init(frame: CGRect)
+}
+
 class TagCollectionViewCell: UICollectionViewCell {
  
     static let identifier = "TagCollectionViewCell"

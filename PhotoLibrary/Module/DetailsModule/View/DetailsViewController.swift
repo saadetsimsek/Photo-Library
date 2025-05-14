@@ -51,6 +51,7 @@ class DetailsViewController: UIViewController {
                                        bottom: 100,
                                        right: 0)
         $0.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        $0.register(TagCollectionViewCell.self, forCellWithReuseIdentifier: TagCollectionViewCell.identifier)
         $0.dataSource = self
         return $0
     }(UICollectionView(frame: view.bounds, collectionViewLayout: getCompositionalLayout()))
@@ -140,12 +141,12 @@ extension DetailsViewController {
     private func createTagSection() -> NSCollectionLayoutSection {
         
         let groupSize = NSCollectionLayoutSize(widthDimension: .estimated(110),
-                                               heightDimension: .estimated(30))
+                                               heightDimension: .estimated(10))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
                                                        subitems: [.init(layoutSize: groupSize)])
         group.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: .fixed(10),
                                                           top: nil,
-                                                          trailing: .fixed(10),
+                                                          trailing: .fixed(0),
                                                           bottom: nil)
         
         let section = NSCollectionLayoutSection(group: group)
@@ -179,8 +180,18 @@ extension DetailsViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-        cell.backgroundColor = .red
-        return cell
+        let item = presenter.item
+       
+        switch indexPath.section {
+        case 1:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TagCollectionViewCell.identifier, for: indexPath) as? TagCollectionViewCell else {  return UICollectionViewCell() }
+            let tagText = item?.tag?[indexPath.item] ?? ""
+            cell.cellConfigure(tagText: tagText)
+            return cell
+        default:
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) 
+            cell.backgroundColor = .red
+            return cell
+        }
     }
 }
