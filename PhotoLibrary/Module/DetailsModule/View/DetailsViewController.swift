@@ -100,6 +100,10 @@ extension DetailsViewController {
     private func getCompositionalLayout() -> UICollectionViewCompositionalLayout {
         UICollectionViewCompositionalLayout{ [weak self] section, _ in
             switch section {
+            case 0:
+                return self?.createPhotoSection()
+            case 1:
+                return self?.createTagSection()
             default:
                 return self?.createPhotoSection()
             }
@@ -127,25 +131,45 @@ extension DetailsViewController {
         section.orthogonalScrollingBehavior = .groupPagingCentered
         section.contentInsets = NSDirectionalEdgeInsets(top: 0,
                                                         leading: 30,
-                                                        bottom: 10,
+                                                        bottom: 30,
                                                         trailing: 30)
         return section
         
+    }
+    
+    private func createTagSection() -> NSCollectionLayoutSection {
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .estimated(110),
+                                               heightDimension: .estimated(30))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
+                                                       subitems: [.init(layoutSize: groupSize)])
+        group.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: .fixed(10),
+                                                          top: nil,
+                                                          trailing: .fixed(10),
+                                                          bottom: nil)
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.contentInsets = NSDirectionalEdgeInsets(top: 0,
+                                                        leading: 30,
+                                                        bottom: 20,
+                                                        trailing: 30)
+        section.orthogonalScrollingBehavior = .continuous
+        return section
     }
 }
 
 extension DetailsViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
+        return 2
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
         case 0:
             return presenter.item?.photos.count ?? 0
-   /*     case 1:
+        case 1:
             return presenter.item?.tag?.count ?? 0
-        case 2, 4, 5:
+   /*     case 2, 4, 5:
             return 1
         case 3:
             return presenter.item?.comments?.count ?? 0 */
