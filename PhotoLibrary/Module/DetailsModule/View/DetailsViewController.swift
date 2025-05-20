@@ -202,11 +202,31 @@ extension DetailsViewController {
                                                         trailing: 30)
         return section
     }
+    
+    private func createMapSection() -> NSCollectionLayoutSection {
+        
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
+                                              heightDimension: .fractionalHeight(1))
+        
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
+                                               heightDimension: .absolute(160))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
+                                                       subitems: [item])
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.contentInsets = NSDirectionalEdgeInsets(top: 0,
+                                                        leading: 30,
+                                                        bottom: 0,
+                                                        trailing: 30)
+        return section
+    }
 }
 
 extension DetailsViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 4
+        return 6
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
