@@ -52,6 +52,7 @@ class DetailsViewController: UIViewController {
                                        right: 0)
         $0.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         $0.register(TagCollectionViewCell.self, forCellWithReuseIdentifier: TagCollectionViewCell.identifier)
+        $0.register(DetailsPhotoCollectionViewCell.self, forCellWithReuseIdentifier: DetailsPhotoCollectionViewCell.identifier)
         $0.dataSource = self
         return $0
     }(UICollectionView(frame: view.bounds, collectionViewLayout: getCompositionalLayout()))
@@ -93,9 +94,12 @@ class DetailsViewController: UIViewController {
   
 }
 
+//MARK: - Protocol
 extension DetailsViewController: DetailViewControllerProtocol {
     
 }
+
+//MARK: -Compositional
 
 extension DetailsViewController {
     private func getCompositionalLayout() -> UICollectionViewCompositionalLayout {
@@ -107,6 +111,10 @@ extension DetailsViewController {
                 return self?.createTagSection()
             case 2, 3:
                 return self?.createDescriptionSection()
+            case 4:
+                return self?.createCommentTextFieldSection()
+            case 5:
+                return self?.createMapSection()
             default:
                 return self?.createPhotoSection()
             }
@@ -224,6 +232,7 @@ extension DetailsViewController {
     }
 }
 
+//MARK: // -Collection
 extension DetailsViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 6
@@ -248,6 +257,10 @@ extension DetailsViewController: UICollectionViewDataSource {
         let item = presenter.item
        
         switch indexPath.section {
+        case 0:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DetailsPhotoCollectionViewCell.identifier, for: indexPath) as? DetailsPhotoCollectionViewCell else { return UICollectionViewCell()}
+            cell.configureCell(image: item?.photos[indexPath.item] ?? "")
+            return cell
         case 1:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TagCollectionViewCell.identifier, for: indexPath) as? TagCollectionViewCell else {  return UICollectionViewCell() }
             let tagText = item?.tag?[indexPath.item] ?? ""
