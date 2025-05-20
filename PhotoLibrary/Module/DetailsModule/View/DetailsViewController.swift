@@ -53,7 +53,9 @@ class DetailsViewController: UIViewController {
         $0.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         $0.register(TagCollectionViewCell.self, forCellWithReuseIdentifier: TagCollectionViewCell.identifier)
         $0.register(DetailsPhotoCollectionViewCell.self, forCellWithReuseIdentifier: DetailsPhotoCollectionViewCell.identifier)
+        $0.register(DetailsDescriptionCollectionViewCell.self, forCellWithReuseIdentifier: DetailsDescriptionCollectionViewCell.identifier)
         $0.dataSource = self
+        $0.delegate = self
         return $0
     }(UICollectionView(frame: view.bounds, collectionViewLayout: getCompositionalLayout()))
 
@@ -233,7 +235,7 @@ extension DetailsViewController {
 }
 
 //MARK: // -Collection
-extension DetailsViewController: UICollectionViewDataSource {
+extension DetailsViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 6
     }
@@ -247,9 +249,11 @@ extension DetailsViewController: UICollectionViewDataSource {
         case 2:
             return 1
         case 3:
-            return 3//presenter.item?.comments?.count ?? 0
+            let count = presenter.item?.comments?.count ?? 0
+            print("Yorum sayısı: \(count)")
+            return count
         default:
-            return 1
+            return 0
         }
     }
     
@@ -266,10 +270,29 @@ extension DetailsViewController: UICollectionViewDataSource {
             let tagText = item?.tag?[indexPath.item] ?? ""
             cell.cellConfigure(tagText: tagText)
             return cell
+        case 2, 3:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DetailsDescriptionCollectionViewCell.identifier, for: indexPath) as? DetailsDescriptionCollectionViewCell else { return UICollectionViewCell() }
+            if indexPath.section == 2 {
+                cell.configureCell(date: nil, text: item?.description ?? "")
+            } else{
+                let comments = item?.comments?[indexPath.row]
+                print("çıktı \(comments?.comment ?? "yok")")
+                cell.configureCell(date: comments?.date, text: comments?.comment ?? "")
+            }
+            return cell
         default:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) 
             cell.backgroundColor = .red
             return cell
         }
     }
+    
+   /* func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if indexPath.section == 3 {
+               return CGSize(width: collectionView.frame.width, height: 80)
+           }
+           return CGSize(width: collectionView.frame.width, height: 50)
+    }
+    */
+    
 }
