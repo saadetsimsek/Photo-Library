@@ -54,6 +54,7 @@ class DetailsViewController: UIViewController {
         $0.register(TagCollectionViewCell.self, forCellWithReuseIdentifier: TagCollectionViewCell.identifier)
         $0.register(DetailsPhotoCollectionViewCell.self, forCellWithReuseIdentifier: DetailsPhotoCollectionViewCell.identifier)
         $0.register(DetailsDescriptionCollectionViewCell.self, forCellWithReuseIdentifier: DetailsDescriptionCollectionViewCell.identifier)
+        $0.register(DetailsAddCommitCollectionViewCell.self, forCellWithReuseIdentifier: DetailsAddCommitCollectionViewCell.identifier)
         $0.dataSource = self
         $0.delegate = self
         return $0
@@ -237,7 +238,7 @@ extension DetailsViewController {
 //MARK: // -Collection
 extension DetailsViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 6
+        return 7
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -252,6 +253,8 @@ extension DetailsViewController: UICollectionViewDataSource, UICollectionViewDel
             let count = presenter.item?.comments?.count ?? 0
             print("Yorum sayısı: \(count)")
             return count
+        case 4:
+            return 1
         default:
             return 0
         }
@@ -278,6 +281,14 @@ extension DetailsViewController: UICollectionViewDataSource, UICollectionViewDel
                 let comments = item?.comments?[indexPath.row]
                 print("çıktı \(comments?.comment ?? "yok")")
                 cell.configureCell(date: comments?.date, text: comments?.comment ?? "")
+            }
+            return cell
+        case 4:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DetailsAddCommitCollectionViewCell.identifier, for: indexPath) as? DetailsAddCommitCollectionViewCell else {
+                return UICollectionViewCell() }
+            cell.completion = {[weak self] comment in
+                guard let self = self else { return }
+                print("\(comment)")
             }
             return cell
         default:
