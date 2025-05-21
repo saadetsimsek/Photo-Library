@@ -55,6 +55,7 @@ class DetailsViewController: UIViewController {
         $0.register(DetailsPhotoCollectionViewCell.self, forCellWithReuseIdentifier: DetailsPhotoCollectionViewCell.identifier)
         $0.register(DetailsDescriptionCollectionViewCell.self, forCellWithReuseIdentifier: DetailsDescriptionCollectionViewCell.identifier)
         $0.register(DetailsAddCommitCollectionViewCell.self, forCellWithReuseIdentifier: DetailsAddCommitCollectionViewCell.identifier)
+        $0.register(DetailsMapCollectionViewCell.self, forCellWithReuseIdentifier: DetailsMapCollectionViewCell.identifier)
         $0.dataSource = self
         $0.delegate = self
         return $0
@@ -69,9 +70,6 @@ class DetailsViewController: UIViewController {
         view.addSubview(headerView)
         setupConstraints()
        
-     
-       
-
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -222,7 +220,7 @@ extension DetailsViewController {
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
-                                               heightDimension: .absolute(160))
+                                               heightDimension: .absolute(300))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
                                                        subitems: [item])
         
@@ -238,7 +236,7 @@ extension DetailsViewController {
 //MARK: // -Collection
 extension DetailsViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 7
+        return 6
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -254,6 +252,8 @@ extension DetailsViewController: UICollectionViewDataSource, UICollectionViewDel
             print("Yorum sayısı: \(count)")
             return count
         case 4:
+            return 1
+        case 5:
             return 1
         default:
             return 0
@@ -290,6 +290,10 @@ extension DetailsViewController: UICollectionViewDataSource, UICollectionViewDel
                 guard let self = self else { return }
                 print("\(comment)")
             }
+            return cell
+        case 5:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DetailsMapCollectionViewCell.identifier, for: indexPath) as? DetailsMapCollectionViewCell else { return UICollectionViewCell() }
+            cell.configureCell(coordinate: item?.location)
             return cell
         default:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) 

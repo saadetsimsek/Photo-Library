@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreLocation
 
 class PostDate: Identifiable {
     let id = UUID()
@@ -74,15 +75,17 @@ class PostItemModel: Identifiable {
     let description: String?
     let isFavorite: Bool
     let date: Date
+    let location: CLLocationCoordinate2D?
     
     init(photos: [String], comments: [Commet]?, tag: [String]?, description: String?,
-         isFavorite: Bool = false, date: Date) {
+         isFavorite: Bool = false, date: Date, location: CLLocationCoordinate2D? = nil) {
         self.photos = photos
         self.comments = comments
         self.tag = tag
         self.description = description
         self.isFavorite = isFavorite
         self.date = date
+        self.location = location
     }
     
     static func getMockItems() -> [PostItemModel]{
@@ -95,37 +98,49 @@ class PostItemModel: Identifiable {
                           tag: ["home", "Nature", "Education", "Work"],
                           description: "jdhfdfhd dshfhdhfghds selam jshdhgesf jsdhhsgf jhfjd",
                           isFavorite: true,
-                          date: Date()),
+                          date: Date(),
+                          location: CLLocationCoordinate2D(latitude: 40.728,
+                                                           longitude: -74)),
             PostItemModel(photos: ["img2", "img1"],
                           comments:  [Commet(date: Date(), comment: "this great")],
                           tag: ["home", "Nature", "Education", "Work"],
                           description: "çay stanley jdhfdfhd dshfhdhfghds selam jshdhgesf jsdhhsgf jhfjd",
                           isFavorite: true,
-                          date: Date()),
+                          date: Date(),
+                          location: CLLocationCoordinate2D(latitude: 40.728,
+                                                           longitude: -74)),
             PostItemModel(photos: ["img3", "img2"],
                           comments:  [Commet(date: Date(), comment: "this incredible")],
                           tag: ["home", "Work"],
                           description: "hey seçtik skıjdshcjd jdhfdfhd dshfhdhfghds selam jshdhgesf jsdhhsgf jhfjd",
                           isFavorite: true,
-                          date: Date()),
+                          date: Date(),
+                          location: CLLocationCoordinate2D(latitude: 40.728,
+                                                           longitude: -74)),
             PostItemModel(photos: ["img2", "img1"],
                           comments: nil,
                           tag: [ "Education", "Work"],
                           description: "üçüncü hey sjdjs skjdkdsjfhsgf jhfjd",
                           isFavorite: true,
-                          date: Date().addingTimeInterval(-172800)),
+                          date: Date().addingTimeInterval(-172800),
+                          location: CLLocationCoordinate2D(latitude: 40.728,
+                                                           longitude: -74)),
             PostItemModel(photos: ["img2", "img1"],
                           comments: nil,
                           tag: [ "Education", "Work"],
                           description: "dördüncü hey sjdjs skjdkdsjfhsgf jhfjd",
                           isFavorite: true,
-                          date: Date().addingTimeInterval(-86400)),
+                          date: Date().addingTimeInterval(-86400),
+                          location: CLLocationCoordinate2D(latitude: 40.728,
+                                                           longitude: -74)),
             PostItemModel(photos: ["img2", "img1"],
                           comments: nil,
                           tag: [ "Education", "Work"],
                           description: "beşinci hey sjdjs skjdkdsjfhsgf jhfjd",
                           isFavorite: true,
-                          date: Date().addingTimeInterval(-172800)),
+                          date: Date().addingTimeInterval(-172800),
+                          location: CLLocationCoordinate2D(latitude: 40.728,
+                                                           longitude: -74)),
             
         ]
     }
