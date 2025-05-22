@@ -27,7 +27,7 @@ class PhotoViewViewController: UIViewController {
         self?.completion?()
     }
     
-    private lazy var scroolView: UIScrollView = {
+    private lazy var scrollView: UIScrollView = {
         $0.delegate = self
         $0.maximumZoomScale = 10
         $0.backgroundColor = .purple
@@ -36,6 +36,12 @@ class PhotoViewViewController: UIViewController {
         $0.addSubview(image)
         return $0
     }(UIScrollView(frame: view.bounds))
+    
+    lazy var tapGesture: UITapGestureRecognizer = {
+        $0.numberOfTapsRequired = 2
+        $0.addTarget(self, action: #selector(zoomImage))
+        return $0
+    }(UITapGestureRecognizer())
     
     private lazy var image: UIImageView = {
         $0.contentMode = .scaleAspectFill
@@ -47,8 +53,31 @@ class PhotoViewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.addSubview(scroolView)
+        view.addSubview(scrollView)
         view.addSubview(closeButton)
+    }
+    
+    private func setImageSize(){
+        let imageSize = image.image?.size
+        let imageHeight = imageSize?.height ?? 0
+        let imageWidth = imageSize?.width ?? 0
+        
+        let ratio = imageHeight/imageWidth
+        
+        image.frame.size = CGSize(width: view.frame.width,
+                                  height: view.frame.width * ratio)
+        image.center = view.center
+    }
+    
+    @objc func zoomImage(){
+        UIView.animate(withDuration: 0.2) {[weak self] in
+            if self?.scrollView.zoomScale ?? 1 > 1 {
+                self?.scrollView.zoomScale = 1
+            }
+            else {
+                self?.scrollView.zoomScale = 2
+            }
+        }
     }
 }
 
@@ -57,5 +86,9 @@ extension PhotoViewViewController: PhotoViewControllerProtocol {
 }
 
 extension PhotoViewViewController: UIScrollViewDelegate {
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return image
+    }
+    
     
 }
