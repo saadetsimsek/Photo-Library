@@ -12,7 +12,7 @@ protocol PhotoViewPresenterProtocol: AnyObject{
     var image: UIImage? { get set }
 }
 
-class PhotoViewPresenter {
+class PhotoViewPresenter: PhotoViewPresenterProtocol {
     var image: UIImage?
     private weak var view: PhotoViewControllerProtocol?
     
@@ -22,7 +22,4 @@ class PhotoViewPresenter {
     }
 }
 
-extension PhotoViewPresenter: PhotoViewPresenterProtocol{
-    
-    
-}
+

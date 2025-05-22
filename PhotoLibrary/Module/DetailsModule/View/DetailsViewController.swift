@@ -302,6 +302,44 @@ extension DetailsViewController: UICollectionViewDataSource, UICollectionViewDel
         }
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard indexPath.section == 0 else { return }
+        
+        guard let itemPhotoName = presenter.item?.photos[indexPath.item],
+              let image = UIImage(named: itemPhotoName),
+              let photoView = Builder.createPhotoViewController(image: image) as? PhotoViewViewController else { return }
+        //ekrana ekleme
+        addChild(photoView)
+        photoView.view.frame = view.bounds
+        view.addSubview(photoView.view)
+        photoView.didMove(toParent: self)
+        
+        //close
+        photoView.completion = {
+            photoView.willMove(toParent: nil)
+            photoView.view.removeFromSuperview()
+            photoView.removeFromParent()
+        }
+     /*   if indexPath.section == 0 {
+            let itemPhoto = presenter.item?.photos[indexPath.item]
+            let photoView = Builder.createPhotoViewController(image: UIImage(named: itemPhoto!)) as? PhotoViewViewController
+            
+            if photoView != nil {
+                addChild(photoView!)
+                photoView?.view.frame = view.bounds
+                
+                view.addSubview(photoView!.view)
+                
+                photoView?.completion = {
+                    photoView?.view.removeFromSuperview()
+                    photoView?.removeFromParent()
+                }
+            }
+            
+           
+        }
+      */
+    }
    
     
    /* func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

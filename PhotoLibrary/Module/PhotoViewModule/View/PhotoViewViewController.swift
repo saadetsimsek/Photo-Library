@@ -11,7 +11,7 @@ protocol PhotoViewControllerProtocol: AnyObject {
     var closeButtonAction: UIAction { get set }
 }
 
-class PhotoViewViewController: UIViewController {
+class PhotoViewViewController: UIViewController, PhotoViewControllerProtocol {
     
     var completion: (() -> ())?
     
@@ -23,7 +23,8 @@ class PhotoViewViewController: UIViewController {
     }(UIButton(frame: CGRect(x: view.bounds.width - 60,
                              y: 60,
                              width: 25,
-                             height: 25)))
+                             height: 25),
+               primaryAction: closeButtonAction))
     
     lazy var closeButtonAction = UIAction {[weak self] _ in
         self?.completion?()
@@ -32,7 +33,7 @@ class PhotoViewViewController: UIViewController {
     private lazy var scrollView: UIScrollView = {
         $0.delegate = self
         $0.maximumZoomScale = 10
-        $0.backgroundColor = .purple
+        $0.backgroundColor = .systemRed
         $0.showsVerticalScrollIndicator = true
         $0.showsHorizontalScrollIndicator = true
         $0.addSubview(image)
@@ -57,6 +58,8 @@ class PhotoViewViewController: UIViewController {
 
         view.addSubview(scrollView)
         view.addSubview(closeButton)
+        scrollView.addGestureRecognizer(tapGesture)
+        setImageSize()
     }
     
     private func setImageSize(){
@@ -83,9 +86,6 @@ class PhotoViewViewController: UIViewController {
     }
 }
 
-extension PhotoViewViewController: PhotoViewControllerProtocol {
-    
-}
 
 extension PhotoViewViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
