@@ -234,7 +234,7 @@ extension DetailsViewController {
 }
 
 //MARK: // -Collection
-extension DetailsViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension DetailsViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 6
     }
@@ -301,6 +301,8 @@ extension DetailsViewController: UICollectionViewDataSource, UICollectionViewDel
             return cell
         }
     }
+    
+   
     
    /* func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if indexPath.section == 3 {

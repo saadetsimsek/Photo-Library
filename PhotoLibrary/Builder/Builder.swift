@@ -60,4 +60,11 @@ class Builder: BuilderProtocol {
         detailView.presenter = presenter
         return detailView
     }
+    
+    static func createPhotoViewController(image: UIImage?) -> UIViewController {
+        let photoView = PhotoViewViewController()
+        let presenter = PhotoViewPresenter(view: photoView, image: image)
+        photoView.presenter = presenter
+        return photoView
+    }
 }

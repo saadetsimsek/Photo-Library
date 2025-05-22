@@ -14,6 +14,8 @@ protocol PhotoViewControllerProtocol: AnyObject {
 class PhotoViewViewController: UIViewController {
     
     var completion: (() -> ())?
+    
+    var presenter: PhotoViewPresenter!
 
     private lazy var closeButton: UIButton = {
         $0.setBackgroundImage(.closeIcon, for: .normal)
@@ -45,7 +47,7 @@ class PhotoViewViewController: UIViewController {
     
     private lazy var image: UIImageView = {
         $0.contentMode = .scaleAspectFill
-        $0.image = .img1
+        $0.image = presenter.image
         $0.isUserInteractionEnabled = true
         return $0
     }(UIImageView())
