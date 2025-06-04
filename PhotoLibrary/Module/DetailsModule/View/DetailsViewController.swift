@@ -262,7 +262,7 @@ extension DetailsViewController: UICollectionViewDataSource, UICollectionViewDel
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let item = presenter.item
-       
+        
         switch indexPath.section {
         case 0:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DetailsPhotoCollectionViewCell.identifier, for: indexPath) as? DetailsPhotoCollectionViewCell else { return UICollectionViewCell()}
@@ -296,7 +296,7 @@ extension DetailsViewController: UICollectionViewDataSource, UICollectionViewDel
             cell.configureCell(coordinate: item?.location)
             return cell
         default:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) 
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
             cell.backgroundColor = .red
             return cell
         }
@@ -315,39 +315,20 @@ extension DetailsViewController: UICollectionViewDataSource, UICollectionViewDel
         photoView.didMove(toParent: self)
         
         //close
-        photoView.completion = {
-            photoView.willMove(toParent: nil)
-            photoView.view.removeFromSuperview()
-            photoView.removeFromParent()
+        photoView.completion = { [weak photoView] in
+            photoView?.willMove(toParent: nil)
+            photoView?.view.removeFromSuperview()
+            photoView?.removeFromParent()
         }
-     /*   if indexPath.section == 0 {
-            let itemPhoto = presenter.item?.photos[indexPath.item]
-            let photoView = Builder.createPhotoViewController(image: UIImage(named: itemPhoto!)) as? PhotoViewViewController
-            
-            if photoView != nil {
-                addChild(photoView!)
-                photoView?.view.frame = view.bounds
-                
-                view.addSubview(photoView!.view)
-                
-                photoView?.completion = {
-                    photoView?.view.removeFromSuperview()
-                    photoView?.removeFromParent()
-                }
-            }
-            
-           
-        }
-      */
+        
+        
+        /* func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+         if indexPath.section == 3 {
+         return CGSize(width: collectionView.frame.width, height: 80)
+         }
+         return CGSize(width: collectionView.frame.width, height: 50)
+         }
+         */
+        
     }
-   
-    
-   /* func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if indexPath.section == 3 {
-               return CGSize(width: collectionView.frame.width, height: 80)
-           }
-           return CGSize(width: collectionView.frame.width, height: 50)
-    }
-    */
-    
 }
