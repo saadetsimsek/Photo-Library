@@ -7,7 +7,13 @@
 
 import UIKit
 
-class CameraViewController: UIViewController {
+protocol CameraViewControllerProtocol: AnyObject {
+    
+}
+
+class CameraViewController: UIViewController , CameraViewControllerProtocol{
+    
+    var presenter: CameraViewPresenterProtocol?
 
     override func viewDidLoad() {
         super.viewDidLoad()
