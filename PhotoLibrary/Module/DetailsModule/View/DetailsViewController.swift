@@ -77,6 +77,10 @@ class DetailsViewController: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = false
         navigationItem.setHidesBackButton(true, animated: true)
         navigationController?.navigationBar.isHidden = true
+        
+        NotificationCenter.default.post(name: .hideTabBar,
+                                        object: nil,
+                                        userInfo: ["isHide" : true])
     }
     
     private func setupConstraints() {

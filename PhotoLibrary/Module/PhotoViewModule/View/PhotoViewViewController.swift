@@ -31,6 +31,7 @@ class PhotoViewViewController: UIViewController, PhotoViewControllerProtocol {
     
     private lazy var scrollView: UIScrollView = {
         $0.delegate = self
+        $0.minimumZoomScale = 1
         $0.maximumZoomScale = 10
         $0.backgroundColor = .systemGray
         $0.showsVerticalScrollIndicator = true
@@ -46,11 +47,11 @@ class PhotoViewViewController: UIViewController, PhotoViewControllerProtocol {
     }(UITapGestureRecognizer())
     
     private lazy var image: UIImageView = {
-        $0.contentMode = .scaleAspectFit
-        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.contentMode = .scaleAspectFill
         $0.image = presenter.image
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.isUserInteractionEnabled = true
+        $0.addGestureRecognizer(tapGesture)
         return $0
     }(UIImageView())
     
@@ -84,6 +85,10 @@ class PhotoViewViewController: UIViewController, PhotoViewControllerProtocol {
         }
     }
     
+    deinit{
+        print("deinit photo view")
+    }
+    
     private func setConstraints(){
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -96,7 +101,6 @@ class PhotoViewViewController: UIViewController, PhotoViewControllerProtocol {
             image.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             image.heightAnchor.constraint(equalTo: image.widthAnchor, multiplier: imageAspectRatio),
             
-      
         ])
         
         NSLayoutConstraint.activate([
@@ -114,5 +118,12 @@ extension PhotoViewViewController: UIScrollViewDelegate {
         return image
     }
     
-    
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        if scrollView.contentSize.height > view.frame.height {
+            image.center.y = scrollView.contentSize.height / 2
+        }
+        else {
+            image.center.y = view.center.y
+        }
+    }
 }

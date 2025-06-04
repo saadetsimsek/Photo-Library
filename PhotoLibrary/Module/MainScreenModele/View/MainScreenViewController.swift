@@ -84,6 +84,13 @@ class MainScreenViewController: UIViewController {
         setConstraints()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        NotificationCenter.default.post(name: .hideTabBar,
+                                        object: nil,
+                                        userInfo: ["isHide" : false])
+    }
+    
     private func setConstraints() {
         NSLayoutConstraint.activate([
             topMenuView.topAnchor.constraint(equalTo: view.topAnchor),
